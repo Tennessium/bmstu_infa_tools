@@ -3,16 +3,20 @@ from json import loads
 import os
 
 
-def load_modules():
-    module_names = os.listdir('modules')
-    _modules = []
+def get_path():
+    return os.path.dirname(os.path.abspath(__file__))[:-4] + 'modules'
 
+
+def load_modules():
+    module_names = os.listdir(get_path())
+    _modules = []
+    print(get_path(), module_names)
     for module_name in module_names:
         try:
-            with open('modules/' + module_name + '/description.json', 'r') as file_read:
+            with open(get_path() + '/' + module_name + '/description.json', 'r') as file_read:
                 description = loads(file_read.read())
             description['id'] = module_name
-            with open('modules/' + module_name + '/' + module_name + '.html', 'r') as page_file:
+            with open(get_path() + '/' + module_name + '/' + module_name + '.html', 'r') as page_file:
                 description['content'] = page_file.read()
             _modules.append(description)
         except:

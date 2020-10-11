@@ -24,7 +24,7 @@ SECRET_KEY = ')v&3^+^@$g$zo0@pb5$yk%0#0f&x@qioc96#t%y@qojy4g_nw!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['infa.tenessinum.works']
 
 # Application definition
 

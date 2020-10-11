@@ -1,0 +1,136 @@
+<script>
+    var countText = function () {
+
+    };
+</script>
+
+<label style="margin-bottom: 20px;" class="text-left h5 text-muted" for="inputArea">положите сюда свой
+    текст</label>
+<div class="input-group">
+    <textarea id="inputArea" class="form-control"></textarea>
+    <div onclick="countText()" class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button">считать!</button>
+    </div>
+</div>
+
+<hr/>
+
+<p id="message" style="margin-bottom: 20px; margin-top: 20px;" class="text-left h5 text-muted">настройки</p>
+
+<div class="custom-control custom-radio">
+    <input type="radio" id="hartliRadio" name="formulaRadio" class="custom-control-input">
+    <label class="custom-control-label text-muted" for="hartliRadio">хартли</label>
+</div>
+<div class="custom-control custom-radio">
+    <input checked type="radio" id="shennonRadio" name="formulaRadio" class="custom-control-input">
+    <label class="custom-control-label text-muted" for="shennonRadio">шеннон</label>
+</div>
+
+<div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="registerCheck">
+    <label class="custom-control-label text-muted" for="registerCheck">учитывать регистр</label>
+</div>
+
+<div class="custom-control custom-checkbox">
+    <input checked type="checkbox" class="custom-control-input" id="doubleSpaceCheck">
+    <label class="custom-control-label text-muted" for="doubleSpaceCheck">убрать двойные пробелы</label>
+</div>
+
+<div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="ignoreCommasCheck">
+    <label class="custom-control-label text-muted" for="ignoreCommasCheck">игнорировать знаки препинания</label>
+</div>
+
+<div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="ignoreSpaceCheck">
+    <label class="custom-control-label text-muted" for="ignoreSpaceCheck">игнорировать пробелы</label>
+</div>
+
+<hr/>
+
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="addon5">энтропия</span>
+    </div>
+    <input id="entropy-output" type="text" class="form-control" placeholder="ждём..."
+           aria-describedby="addon5" readonly>
+</div>
+
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text">текст после обработки</span>
+    </div>
+    <textarea readonly id="outputArea" class="form-control"></textarea>
+</div>
+
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text">подробная информация</span>
+    </div>
+    <textarea readonly id="outputInfoArea" class="form-control"></textarea>
+</div>
+
+
+<script>
+    countText = function () {
+        let text = document.getElementById('inputArea').value;
+        let formula = document.getElementById('hartliRadio').checked;
+        let register = document.getElementById('registerCheck').checked;
+        let doubleSpace = document.getElementById('doubleSpaceCheck').checked;
+        let ignoreCommas = document.getElementById('ignoreCommasCheck').checked;
+        let ignoreSpaces = document.getElementById('ignoreSpaceCheck').checked;
+
+
+        if (!register) {
+            text = text.toLowerCase();
+        }
+
+        if (doubleSpace) {
+            while (text.indexOf('  ') !== -1)
+                text = text.replaceAll('  ', ' ');
+        }
+
+        if (ignoreCommas) {
+            text = text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+        }
+
+        if (ignoreSpaces) {
+            while (text.indexOf(' ') !== -1)
+                text = text.replaceAll(' ', '');
+        }
+
+        document.getElementById('outputArea').value = text;
+
+        let entropy = 0;
+        let symbols = {};
+
+        for (let i = 0; i < text.length; i++) {
+            if (symbols[text[i]] !== undefined) {
+                symbols[text[i]] += 1;
+            } else {
+                symbols[text[i]] = 1;
+            }
+        }
+
+        let keys = Object.keys(symbols);
+        keys.sort();
+
+        if (formula) {
+            keys.forEach(function (element) {
+                entropy -= (Math.log2(symbols[element] / text.length
+                ))
+            });
+        } else {
+            keys.forEach(function (element) {
+                entropy -= (symbols[element] / text.length) * (Math.log2(symbols[element] / text.length))
+            });
+        }
+
+        document.getElementById('entropy-output').value = entropy;
+        document.getElementById('outputInfoArea').value = "";
+
+        keys.forEach(function (element) {
+            document.getElementById('outputInfoArea').value += '\'' + element + '\': ' + symbols[element] + '\n';
+        });
+    }
+</script>

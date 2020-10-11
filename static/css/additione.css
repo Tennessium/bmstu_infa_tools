@@ -1,0 +1,39 @@
+html {
+    font-family: "Roboto", "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.module-card {
+    border-radius: 15px;
+    margin: 10px;
+    cursor: pointer;
+    transition: .3s;
+    width: auto;
+}
+
+.module-card:hover {
+    border-radius: 5px;
+    transition: .3s;
+    margin: 5px;
+    padding: 5px;
+}
+
+.author {
+    margin-top: 40px;
+    transition: .3s;
+}
+
+.author:hover {
+    text-decoration: underline;
+    transition: .3s;
+}
+
+.preload * {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -ms-transition: none !important;
+  -o-transition: none !important;
+}

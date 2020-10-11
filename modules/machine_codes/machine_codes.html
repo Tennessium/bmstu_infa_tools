@@ -1,0 +1,128 @@
+<script>
+    var countCodes = function () {
+
+    };
+</script>
+
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="addon1">x = </span>
+    </div>
+    <input id="number-input" type="number" class="form-control" placeholder="чему же равен x?"
+           aria-describedby="addon1 addon2">
+    <div onclick="countCodes()" class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" id="addon2">считать!</button>
+    </div>
+</div>
+
+<p id="message" style="margin: 10px; margin-bottom: 20px;" class="text-left h5 text-muted">ждём...</p>
+
+<div class="input-group mb-3">
+    <input id="straight-code" type="text" class="form-control" placeholder="ждём..."
+           aria-describedby="addon3" readonly>
+    <div class="input-group-append">
+        <span class="input-group-text" id="addon3">прямой код</span>
+    </div>
+</div>
+
+<div class="input-group mb-3">
+    <input id="reverse-code" type="text" class="form-control" placeholder="ждём..."
+           aria-describedby="addon4" readonly>
+    <div class="input-group-append">
+        <span class="input-group-text" id="addon4">обратный код</span>
+    </div>
+</div>
+
+<div class="input-group mb-3">
+    <input id="additional-code" type="text" class="form-control" placeholder="ждём..."
+           aria-describedby="addon5" readonly>
+    <div class="input-group-append">
+        <span class="input-group-text" id="addon5">дополнительный код</span>
+    </div>
+</div>
+
+<script>
+    let number_input = document.getElementById('number-input');
+    let message_p = document.getElementById('message');
+    let straight_code = document.getElementById('straight-code');
+    let reverse_code = document.getElementById('reverse-code');
+    let additional_code = document.getElementById('additional-code');
+
+    String.prototype.replaceAt = function (index, replacement) {
+        return this.substr(0, index) + replacement + this.substr(index + replacement.length);
+    }
+
+    function intToBinary(x) {
+        let b = '';
+
+        if (x === 0)
+            return '0';
+
+        while (x > 0) {
+            b += (x % 2).toString();
+            x = Math.floor(x / 2);
+        }
+
+        return b.split("").reverse().join("");
+    }
+
+    function alertError(_message) {
+        message_p.innerText = 'ой, ошибка' + _message;
+        straight_code.value = 'грустно'
+        reverse_code.value = straight_code.value;
+        additional_code.value = straight_code.value;
+    }
+
+    function intToReverse(x) {
+        let b = intToBinary(x);
+        let rb = '';
+
+        for (let i = 0; i < b.length; i++)
+            if (b[i] === '0')
+                rb += '1';
+            else
+                rb += '0'
+
+        return rb;
+    }
+
+    function intToAdditional(x) {
+        let b = intToReverse(x);
+
+        for (let i = b.length - 1; i >= 0; i--) {
+            if (b[i] === '1') {
+                b = b.replaceAt(i, '0');
+            } else {
+                b = b.replaceAt(i, '1');
+                break;
+            }
+        }
+
+        return b
+    }
+
+    countCodes = function () {
+        let input = number_input.value;
+        if (input === null || input === '') {
+            alertError(', вы не дали x');
+        } else {
+            if (input.indexOf('.') === -1) {
+                let x = parseInt(input);
+                if (x >= 0) {
+                    straight_code.value = '0,' + intToBinary(x);
+                    reverse_code.value = straight_code.value;
+                    additional_code.value = straight_code.value;
+                    message.innerText = 'ну тут число целое и положительное так что...';
+                } else {
+                    straight_code.value = '1,' + intToBinary(-x);
+                    reverse_code.value = '1,' + intToReverse(-x);
+                    additional_code.value = '1,' + intToAdditional(-x);
+                    message.innerText = 'ну тут число целое и отрицательное так что...';
+                }
+            } else {
+                console.log('float');
+            }
+        }
+    }
+
+</script>
